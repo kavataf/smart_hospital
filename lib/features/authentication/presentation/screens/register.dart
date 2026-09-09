@@ -1,5 +1,5 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_hospital/core/functions.dart';
 import 'package:smart_hospital/features/authentication/presentation/screens/login.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/button.dart';
@@ -14,6 +14,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
   bool _hideText = false;
   bool _isChecked = false;
   @override
@@ -40,94 +41,125 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      Text('Create your account',
-                        style: TextStyle(color: Color(0xFF000000),
-                            fontSize: 20, fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(height: 10,),
-                      Text('Provide your full name, email and password to\n create your account and get started',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0xFF000000),
-                            fontSize: 12),
-                      ),
-                      SizedBox(height: 40,),
-                      Inputfield(
-                        labelText: 'Full Name',
-                        hintText: 'Enter your name',
-                        prefixIcon: Icon(Icons.person),
-                        keyboardInput: TextInputType.text,
-                        suffixIcon: Icon(null),
-                        obsecureText: false,
-                      ),
-                      SizedBox(height: 20,),
-                      Inputfield(
-                        labelText: 'Email Address',
-                        hintText: 'Enter your email',
-                        prefixIcon: Icon(Icons.email_outlined),
-                        keyboardInput: TextInputType.emailAddress,
-                        suffixIcon: Icon(null),
-                        obsecureText: false,
-                      ),
-                      SizedBox(height: 20,),
-                      Inputfield(
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
-                        prefixIcon: Icon(Icons.lock),
-                        keyboardInput: TextInputType.text,
-                        suffixIcon: GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                _hideText = !_hideText;
-                              });
-                            },
-                            child: Icon(_hideText? Icons.visibility_off : Icons.visibility)),
-                        obsecureText: _hideText,
-                      ),
-                      SizedBox(height: 20,),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: _isChecked,
-                              onChanged: (bool? newValue){
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Text('Create your account',
+                          style: TextStyle(color: Color(0xFF000000),
+                              fontSize: 20, fontWeight: FontWeight.w700),
+                        ),
+                        SizedBox(height: 10,),
+                        Text('Provide your full name, email and password to\n create your account and get started',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Color(0xFF000000),
+                              fontSize: 12),
+                        ),
+                        SizedBox(height: 40,),
+                        Inputfield(
+                          labelText: 'Full Name',
+                          hintText: 'Enter your name',
+                          prefixIcon: Icon(Icons.person),
+                          keyboardInput: TextInputType.text,
+                          obsecureText: false,
+                          validator: validateName,
+                        ),
+                        SizedBox(height: 20,),
+                        Inputfield(
+                          labelText: 'Email Address',
+                          hintText: 'Enter your email',
+                          prefixIcon: Icon(Icons.email_outlined),
+                          keyboardInput: TextInputType.emailAddress,
+                          obsecureText: false,
+                          validator: validateEmail,
+                        ),
+                        SizedBox(height: 20,),
+                        Inputfield(
+                          labelText: 'Password',
+                          hintText: 'Enter your password',
+                          prefixIcon: Icon(Icons.lock),
+                          keyboardInput: TextInputType.text,
+                          suffixIcon: GestureDetector(
+                              onTap: (){
                                 setState(() {
-                                  _isChecked = newValue ?? false;
+                                  _hideText = !_hideText;
                                 });
-                              }),
-                          SizedBox(width: 8,),
-                          RichText(
-                            text: TextSpan(
+                              },
+                              child: Icon(_hideText? Icons.visibility_off : Icons.visibility)),
+                          obsecureText: _hideText,
+                          validator: validatePassword,
+                        ),
+                        SizedBox(height: 20,),
+                            FormField<bool>(
+                              initialValue: _isChecked,
+                                validator: (value){
+                                  if(value != true){
+                                    return "Please agree to the terms and privacy policy";
+                                  }
+                                return null;
+                                },
+                                builder: (FormFieldState<bool> field){
+                                  return Column(
+                                    children: [
+                                      Row(
+                                          children: [
+                                            Checkbox(
+                                          value: _isChecked,
+                                          onChanged: (bool? newValue){
+                                            setState(() {
+                                              _isChecked = newValue ?? false;
+                                            });
+                                            field.didChange(_isChecked);
+                                          }),
+                                            SizedBox(width: 8,),
+                                            RichText(
+                                              text: TextSpan(
+                                                  style: TextStyle(color: Color(0xFF000000), fontSize: 14),
+                                                  children: [
+                                                    TextSpan(text: 'I agree to the '),
+                                                    TextSpan(text: 'Terms & Privacy Policy', style: TextStyle(fontWeight: FontWeight.bold))
+                                                  ]
+                                              ),
+                                            ),
+                                          ]),
+                                      if(field.hasError)
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                            child: Text(field.errorText!,
+                                            style: TextStyle(color: Colors.red, fontSize: 12)),
+                                          ),
+                                        )
+                                    ],
+                                  );
+
+                                }
+                            ),
+                        SizedBox(height: 20,),
+                        Button(text: 'Sign Up',
+                          onpressed: () {
+                          if(_formKey.currentState!.validate()){
+                            Navigator.pushNamed(context, Login.id);
+                          }
+                          },),
+                        SizedBox(height: 40,),
+                        RichText(
+                          text: TextSpan(
                               style: TextStyle(color: Color(0xFF000000), fontSize: 14),
                               children: [
-                                TextSpan(text: 'I agree to the '),
-                                TextSpan(text: 'Terms & Privacy Policy', style: TextStyle(fontWeight: FontWeight.bold))
+                                TextSpan(text: 'Already have an account? '),
+                                WidgetSpan(
+                                    child: GestureDetector(onTap: (){
+                                      Navigator.pushNamed(context, Login.id);
+                                    },
+                                      child: Text('Sign In', style: TextStyle(color: AppColors.primary)),
+                                    )),
                               ]
-                            ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20,),
-                      Button(text: 'Sign Up',
-                        onpressed: () {
-                          Navigator.pushNamed(context, Register.id);
-                        },),
-                      SizedBox(height: 40,),
-                      RichText(
-                        text: TextSpan(
-                            style: TextStyle(color: Color(0xFF000000), fontSize: 14),
-                            children: [
-                              TextSpan(text: 'Already have an account? '),
-                              WidgetSpan(
-                                  child: GestureDetector(onTap: (){
-                                    Navigator.pushNamed(context, Login.id);
-                                  },
-                                    child: Text('Sign In', style: TextStyle(color: AppColors.primary)),
-                                  )),
-                            ]
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )
                 ],
               ),

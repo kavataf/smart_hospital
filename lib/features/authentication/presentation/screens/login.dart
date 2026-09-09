@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_hospital/core/constants/app_colors.dart';
+import 'package:smart_hospital/core/functions.dart';
 import 'package:smart_hospital/features/authentication/presentation/screens/register.dart';
 import '../../../../core/widgets/inputfield.dart';
 import '/core/widgets/button.dart';
@@ -14,6 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
   bool _hideText = false;
   @override
   Widget build(BuildContext context) {
@@ -39,75 +41,80 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  Column(
-              
-                    children: [
-                      Text('Welcome Back',
-                        style: TextStyle(color: Color(0xFF000000),
-                        fontSize: 20, fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(height: 10,),
-                      Text('Stay connected by signing in with your email\nand password to access your account',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0xFF000000),
-                            fontSize: 12),
-                      ),
-                      SizedBox(height: 40,),
-                      Inputfield(
-                          labelText: 'Email Address',
-                          hintText: 'Enter your email',
-                        prefixIcon: Icon(Icons.email_outlined),
-                        keyboardInput: TextInputType.emailAddress,
-                        suffixIcon: Icon(null),
-                        obsecureText: false,
-                      ),
-                      SizedBox(height: 20,),
-                      Inputfield(
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
-                        prefixIcon: Icon(Icons.lock),
-                        keyboardInput: TextInputType.text,
-                        suffixIcon: GestureDetector(
-                          onTap: (){
-                            setState(() {
-                              _hideText = !_hideText;
-                            });
-                          },
-                            child: Icon(_hideText? Icons.visibility_off : Icons.visibility)),
-                        obsecureText: _hideText,
-                      ),
-                      SizedBox(height: 20,),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.pushNamed(context, ForgotPassword.id);
-                          },
-                          child: Text('Forgot Password?',
-                          style: TextStyle(color: AppColors.primary, fontSize: 14),),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Text('Welcome Back',
+                          style: TextStyle(color: Color(0xFF000000),
+                          fontSize: 20, fontWeight: FontWeight.w700),
                         ),
-                      ),
-                      SizedBox(height: 20,),
-                      Button(text: 'Sign In',
-                        onpressed: () {
-                        Navigator.pushNamed(context, Register.id);
-                        },),
-                      SizedBox(height: 50,),
-                      RichText(
-                        text: TextSpan(
-                            style: TextStyle(color: Color(0xFF000000), fontSize: 14),
-                            children: [
-                              TextSpan(text: 'Don\'t have an account? '),
-                              WidgetSpan(
-                                  child: GestureDetector(onTap: (){
-                                    Navigator.pushNamed(context, Register.id);
-                                  },
-                                    child: Text('Sign Up', style: TextStyle(color: AppColors.primary)),
-                                  )),
-                            ]
+                        SizedBox(height: 10,),
+                        Text('Stay connected by signing in with your email\nand password to access your account',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Color(0xFF000000),
+                              fontSize: 12),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 40,),
+                        Inputfield(
+                            labelText: 'Email Address',
+                            hintText: 'Enter your email',
+                          prefixIcon: Icon(Icons.email_outlined),
+                          keyboardInput: TextInputType.emailAddress,
+                          obsecureText: false,
+                          validator: validateEmail,
+                        ),
+                        SizedBox(height: 20,),
+                        Inputfield(
+                          labelText: 'Password',
+                          hintText: 'Enter your password',
+                          prefixIcon: Icon(Icons.lock),
+                          keyboardInput: TextInputType.text,
+                          suffixIcon: GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                _hideText = !_hideText;
+                              });
+                            },
+                              child: Icon(_hideText? Icons.visibility_off : Icons.visibility)),
+                          obsecureText: _hideText,
+                          validator: validatePassword,
+                        ),
+                        SizedBox(height: 20,),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.pushNamed(context, ForgotPassword.id);
+                            },
+                            child: Text('Forgot Password?',
+                            style: TextStyle(color: AppColors.primary, fontSize: 14),),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Button(text: 'Sign In',
+                          onpressed: () {
+                          if(_formKey.currentState!.validate()) {
+                            Navigator.pushNamed(context, Register.id);
+                          }
+                          },),
+                        SizedBox(height: 50,),
+                        RichText(
+                          text: TextSpan(
+                              style: TextStyle(color: Color(0xFF000000), fontSize: 14),
+                              children: [
+                                TextSpan(text: 'Don\'t have an account? '),
+                                WidgetSpan(
+                                    child: GestureDetector(onTap: (){
+                                      Navigator.pushNamed(context, Register.id);
+                                    },
+                                      child: Text('Sign Up', style: TextStyle(color: AppColors.primary)),
+                                    )),
+                              ]
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),

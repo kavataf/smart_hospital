@@ -4,15 +4,18 @@ import 'package:smart_hospital/core/constants/app_colors.dart';
 class Inputfield extends StatelessWidget {
   const Inputfield({super.key, required this.labelText,
     required this.hintText, required this.prefixIcon,
-    required this.keyboardInput, required this.suffixIcon,
-  required this.obsecureText});
+    required this.keyboardInput, this.suffixIcon,
+  required this.obsecureText, this.validator, this.controller});
 
   final String labelText;
   final String hintText;
   final Icon prefixIcon;
-    final Widget? suffixIcon;
+  final Widget? suffixIcon;
   final TextInputType keyboardInput;
   final bool obsecureText;
+
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +27,13 @@ class Inputfield extends StatelessWidget {
             alignment: Alignment.centerLeft,
               child: Text(labelText, style: TextStyle(color: Color(0xFF0F172A), fontSize: 16),)),
           SizedBox(height: 10,),
-          TextField(
+          TextFormField(
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: TextStyle(color: Color(0xFF64748B), fontSize: 16),
                 prefixIcon: prefixIcon,
-                suffix: suffixIcon,
+                suffixIcon: suffixIcon,
                 filled: true,
                 fillColor: Color(0xFFFFFFFF),
               border: OutlineInputBorder(
@@ -44,6 +47,8 @@ class Inputfield extends StatelessWidget {
             ),
             keyboardType: keyboardInput,
             obscureText: obsecureText,
+            validator: validator,
+            controller: controller,
           ),
         ],
       ),
