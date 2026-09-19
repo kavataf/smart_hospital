@@ -4,6 +4,7 @@ import 'package:smart_hospital/features/authentication/presentation/screens/logi
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/button.dart';
 import '../../../../core/widgets/inputfield.dart';
+import '/features/authentication/services/auth_service.dart';
 
 class Register extends StatefulWidget {
   static const String id = 'Register';
@@ -14,9 +15,22 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _hideText = false;
   bool _isChecked = false;
+  bool _isLoading = false;
+  final AuthService authService = AuthService();
+
+  @override
+  void dispose() {
+    _password.dispose();
+    _name.dispose();
+    _email.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -63,6 +77,7 @@ class _RegisterState extends State<Register> {
                           keyboardInput: TextInputType.text,
                           obsecureText: false,
                           validator: validateName,
+                          controller: _name,
                         ),
                         SizedBox(height: 20,),
                         Inputfield(
@@ -72,6 +87,7 @@ class _RegisterState extends State<Register> {
                           keyboardInput: TextInputType.emailAddress,
                           obsecureText: false,
                           validator: validateEmail,
+                          controller: _email,
                         ),
                         SizedBox(height: 20,),
                         Inputfield(
@@ -88,6 +104,7 @@ class _RegisterState extends State<Register> {
                               child: Icon(_hideText? Icons.visibility_off : Icons.visibility)),
                           obsecureText: _hideText,
                           validator: validatePassword,
+                          controller: _password,
                         ),
                         SizedBox(height: 20,),
                             FormField<bool>(
@@ -138,9 +155,32 @@ class _RegisterState extends State<Register> {
                             ),
                         SizedBox(height: 20,),
                         Button(text: 'Sign Up',
-                          onpressed: () {
+                          isLoading: _isLoading,
+                          onpressed: _isLoading? null : () async {
                           if(_formKey.currentState!.validate()){
-                            Navigator.pushNamed(context, Login.id);
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            try {
+                              final name = _name.text.trim();
+                              final email = _email.text.trim();
+                              final password = _password.text.trim();
+                              //   pass fields to auth service
+                              final response = await authService.signup(
+                                  name: name,
+                                  email: email,
+                                  password: password
+                              );
+                              // if signup's successful
+                              print(response['message']);
+                              Navigator.pushNamed(context, Login.id);
+                            } catch (error){
+                              print("Something went wrong: $error");
+                            } finally {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }
                           }
                           },),
                         SizedBox(height: 40,),

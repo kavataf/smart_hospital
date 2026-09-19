@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_hospital/features/authentication/presentation/screens/forgotpassword.dart';
+import 'package:smart_hospital/features/patients/screens/dashboard.dart';
 import '/features/authentication/presentation/screens/splash.dart';
 import 'features/authentication/presentation/screens/emailcode.dart';
 import 'features/authentication/presentation/screens/login.dart';
@@ -26,8 +27,9 @@ class SmartHospital extends StatelessWidget {
         Login.id: (context) => const Login(),
         Register.id : (context) => const Register(),
         ForgotPassword.id : (context) => const ForgotPassword(),
-        EmailCode.id : (context) => const EmailCode(),
-        ResetPassword.id : (context) => const ResetPassword(),
+        EmailCode.id : (context) => const EmailCode(email: '',),
+        ResetPassword.id : (context) => const ResetPassword(resetToken: '',),
+        PatientDashboard.id : (context) => const PatientDashboard(),
       },
     );
   }

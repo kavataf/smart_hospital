@@ -3,18 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:smart_hospital/core/constants/app_colors.dart';
 
 class NumberInput extends StatelessWidget {
-  const NumberInput({super.key});
-
+  const NumberInput({required this.controller, super.key});
+  final TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 50,
+      width: 300,
       height: 50,
       child: TextField(
         textAlign: TextAlign.center,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
             decoration: InputDecoration(
-                hintText: '0',
+                hintText: '0000',
                 hintStyle: TextStyle(color: Color(0xFF64748B), fontSize: 26, fontWeight: FontWeight.w700),
                 filled: true,
                 fillColor: Color(0xFFFFFFFF),
@@ -30,7 +30,7 @@ class NumberInput extends StatelessWidget {
             ),
             keyboardType:  TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(1)],
+        LengthLimitingTextInputFormatter(4)],
           ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:smart_hospital/features/authentication/presentation/screens/emai
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/button.dart';
 import '../../../../core/widgets/inputfield.dart';
+import '/features/authentication/services/auth_service.dart';
 
 class ForgotPassword extends StatefulWidget {
   static const String id = 'ForgotPassword';
@@ -14,7 +15,16 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+  final TextEditingController _email = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final AuthService authService = AuthService();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,12 +71,32 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           keyboardInput: TextInputType.emailAddress,
                           obsecureText: false,
                           validator: validateEmail,
+                          controller: _email,
                         ),
                         SizedBox(height: 20,),
                         Button(text: 'Submit',
-                          onpressed: () {
+                          isLoading: _isLoading,
+                          onpressed: _isLoading? null : () async{
                           if(_formKey.currentState!.validate()){
-                            Navigator.pushNamed(context, EmailCode.id);
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            try {
+                              final email = _email.text.trim();
+                              final response = await authService.forgotpassword(
+                                  email: email);
+                              print(response['message']);
+                              Navigator.pushNamed(context, EmailCode.id, arguments: email);
+                            } catch(error){
+                              print("Something went wrong: $error");
+                            } finally {
+                              if(mounted){
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            }
+
                             }
                           },),
                       ],

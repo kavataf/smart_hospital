@@ -60,7 +60,7 @@ class _SplashState extends State<Splash> {
                     ),
                   ),
                   SizedBox(height: 20,),
-                  Button(
+                  Button2(
                       text: 'Get Started',
                       onpressed: (){
                         Navigator.pushReplacementNamed(context, Login.id);

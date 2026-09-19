@@ -4,10 +4,12 @@ import 'package:smart_hospital/features/authentication/presentation/screens/logi
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/button.dart';
 import '../../../../core/widgets/inputfield.dart';
+import '/features/authentication/services/auth_service.dart';
 
 class ResetPassword extends StatefulWidget {
   static const String id = 'ResetPassword';
-  const ResetPassword({super.key});
+  final String resetToken;
+  const ResetPassword({super.key, required this.resetToken});
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -19,6 +21,14 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   bool _hideText = false;
   bool _hideconfirmText = false;
+  bool _isLoading = false;
+  final AuthService authService = AuthService();
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -101,12 +111,30 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                         SizedBox(height: 30,),
                         Button(text: 'Reset password',
-                          onpressed: () {
+                          isLoading: _isLoading,
+                          onpressed: _isLoading? null : () async {
                             if(_formKey.currentState!.validate()){
-                              Navigator.pushNamed(context, Login.id);
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              try {
+                                final password = _passwordController.text.trim();
+                                final confirmPassword = _confirmPasswordController.text.trim();
+                                final response = await authService.resetpassword(
+                                    resetToken: widget.resetToken,
+                                    newPassword: password,
+                                    confirmPassword: confirmPassword);
+                                print(response['message']);
+                                Navigator.pushNamed(context, Login.id);
+                              }catch(error){
+                                print("Something went wrong: $error");
+                              } finally{
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
                             }
                           },),
-
                       ],
                     ),
                   )
