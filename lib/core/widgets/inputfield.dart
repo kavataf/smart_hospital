@@ -3,13 +3,13 @@ import 'package:smart_hospital/core/constants/app_colors.dart';
 
 class Inputfield extends StatelessWidget {
   const Inputfield({super.key, required this.labelText,
-    required this.hintText, required this.prefixIcon,
+    required this.hintText, this.prefixIcon,
     required this.keyboardInput, this.suffixIcon,
   required this.obsecureText, this.validator, this.controller});
 
   final String labelText;
   final String hintText;
-  final Icon prefixIcon;
+  final Widget? prefixIcon;
   final Widget? suffixIcon;
   final TextInputType keyboardInput;
   final bool obsecureText;

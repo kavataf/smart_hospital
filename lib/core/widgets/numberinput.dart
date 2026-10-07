@@ -31,6 +31,7 @@ class NumberInput extends StatelessWidget {
             keyboardType:  TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(4)],
+        controller: controller,
           ),
     );
   }

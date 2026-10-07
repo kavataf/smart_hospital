@@ -3,6 +3,7 @@ import 'package:smart_hospital/core/constants/app_colors.dart';
 import 'package:smart_hospital/core/functions.dart';
 import 'package:smart_hospital/features/authentication/presentation/screens/register.dart';
 import 'package:smart_hospital/features/patients/screens/dashboard.dart';
+import 'package:smart_hospital/main_screen.dart';
 import '../../../../core/widgets/inputfield.dart';
 import '/core/widgets/button.dart';
 import 'package:smart_hospital/features/authentication/presentation/screens/forgotpassword.dart';
@@ -121,7 +122,7 @@ class _LoginState extends State<Login> {
                                   email: email,
                                   password: password);
                               print(response['message']);
-                              Navigator.pushNamed(context, PatientDashboard.id);
+                              Navigator.pushNamed(context, MainScreen.id);
                             } catch(error){
                               print("Something went wrong: $error");
                             } finally {

@@ -3,6 +3,7 @@ import 'package:smart_hospital/core/constants/app_colors.dart';
 import 'package:smart_hospital/core/widgets/appointment.dart';
 import 'package:smart_hospital/core/widgets/dept.dart';
 import 'package:smart_hospital/core/widgets/doctor.dart';
+import 'package:smart_hospital/features/patients/screens/appointment.dart';
 import '../../../core/widgets/inputfield.dart';
  class PatientDashboard extends StatefulWidget {
    static const String id = 'patient';
@@ -13,7 +14,7 @@ import '../../../core/widgets/inputfield.dart';
  }
 
  class _PatientDashboardState extends State<PatientDashboard> {
-   final List<String> departments = ['Cardiology', 'Dermatology', 'Neurology', 'Surgery', 'pediatrics'];
+
    @override
    Widget build(BuildContext context) {
      return SafeArea(
@@ -97,8 +98,8 @@ import '../../../core/widgets/inputfield.dart';
                      Row(children: [
                        Text("Upcoming", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                        SizedBox(width: 8,),
-                       CircleAvatar(radius: 14,
-                         child: Text("3", style: TextStyle(fontSize: 14, color: Colors.black),),)
+                       CircleAvatar(radius: 12, backgroundColor: Colors.black,
+                         child: Text("3", style: TextStyle(fontSize: 14, color: Colors.white),),)
                      ],),
                      Text("view all",
                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,
@@ -106,13 +107,28 @@ import '../../../core/widgets/inputfield.dart';
                    ],),
                    SizedBox(height: 20,),
                    SizedBox(
-                     height: 207,
+                     height: 290,
                      child: ListView.builder(
-                         itemCount: 3,
+                         itemCount: appointments.length,
                          scrollDirection: Axis.horizontal,
                          itemBuilder: (context, index) {
+                           final appointment = appointments[index];
                            return Padding(padding: EdgeInsets.only(right: 10),
-                             child: DoctorCard(),
+                             child: SizedBox(
+                               width: 320,
+                               child: GestureDetector(
+                                 onTap: (){
+                                   Navigator.pushNamed(context, Appointment.id);
+                                 },
+                                 child: AppointmentCard(
+                                     doctorName: appointment['doctorName']!,
+                                     specialization: appointment['specialization']!,
+                                     date: appointment['date']!,
+                                     time: appointment['time']!,
+                                     department: appointment['department']!,
+                                     status: appointment['status']!),
+                               ),
+                             ),
                            );
                          }),
                    ),
@@ -126,17 +142,22 @@ import '../../../core/widgets/inputfield.dart';
                              color: AppColors.primary),)
                      ],),
                    SizedBox(height: 20,),
-                   // Expanded(
-                   //   child: ListView.builder(
-                   //       itemCount: 3,
-                   //       scrollDirection: Axis.vertical,
-                   //       itemBuilder: (context, index) {
-                   //         return Padding(padding: EdgeInsets.only(right: 10),
-                   //           child: AppointmentCard(),
-                   //         );
-                   //       }),
-                   // ),
-                 ],
+                   SizedBox(
+                     height: 200,
+                     child: ListView.builder(
+                         itemCount: 3,
+                         scrollDirection: Axis.vertical,
+                         itemBuilder: (context, index) {
+                           final doctor = doctors[index];
+                           return Padding(padding: EdgeInsets.only(right: 10),
+                             child: DoctorCard(doctorName: doctor['doctorName']!,
+                                 status: doctor['status']!,
+                                 experience: doctor['experience']!,
+                                 specialization: doctor['specialization']!),
+                           );
+                         }),
+                   ),
+                   ],
                ),
              ),
            ),

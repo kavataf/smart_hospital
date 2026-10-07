@@ -7,8 +7,8 @@ import '/features/authentication/services/auth_service.dart';
 
 class EmailCode extends StatefulWidget {
   static const String id = 'EmailCode';
-  const EmailCode({super.key, required this.email});
   final String email;
+  const EmailCode({super.key, required this.email});
   @override
   State<EmailCode> createState() => _EmailCodeState();
 }
@@ -60,12 +60,7 @@ class _EmailCodeState extends State<EmailCode> {
                             fontSize: 12),
                       ),
                       SizedBox(height: 40,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          NumberInput(controller: _code,)
-                        ],
-                      ),
+                      NumberInput(controller: _code),
                       SizedBox(height: 20,),
                       Button(text: 'Continue',
                         isLoading: _isLoading,
@@ -76,8 +71,6 @@ class _EmailCodeState extends State<EmailCode> {
                           try {
                             final email = widget.email;
                             final code = _code.text.trim();
-                            print("email sent: $email");
-                            print("code sent: $code");
                             final response = await authService.verifycode(
                                 email: email,
                                 code: code);
