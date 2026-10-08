@@ -4,6 +4,7 @@ import 'package:smart_hospital/core/widgets/appointment.dart';
 import 'package:smart_hospital/core/widgets/dept.dart';
 import 'package:smart_hospital/core/widgets/doctor.dart';
 import 'package:smart_hospital/features/patients/screens/appointment.dart';
+import 'package:smart_hospital/features/patients/screens/notifications.dart';
 import '../../../core/widgets/inputfield.dart';
  class PatientDashboard extends StatefulWidget {
    static const String id = 'patient';
@@ -55,7 +56,11 @@ import '../../../core/widgets/inputfield.dart';
                        CircleAvatar(
                          radius: 20,
                          backgroundColor: Color(0xFFCBD5E1),
-                         child: Icon(Icons.notifications_none, color: Colors.black,),
+                         child: GestureDetector(
+                           onTap: (){
+                             Navigator.pushNamed(context, Notifications.id);
+                           },
+                             child: Icon(Icons.notifications_none, color: Colors.black,)),
                        )
                      ],
                    ),

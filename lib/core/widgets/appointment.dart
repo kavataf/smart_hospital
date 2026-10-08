@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smart_hospital/features/patients/screens/appointment.dart';
-
 import '../constants/app_colors.dart';
 class AppointmentCard extends StatelessWidget {
   const AppointmentCard({
